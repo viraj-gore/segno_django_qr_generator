@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Email QR Code Generator</h2>
+<form method="post" action="{% url 'email' %}">
+    {% csrf_token %}
+    <div>
+        <label for="recipient">Recipient:</label>
+        <input type="email" id="recipient" name="recipient" required>
+    </div>
+    <div>
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject">
+    </div>
+    <div>
+        <label for="body">Body:</label>
+        <textarea id="body" name="body"></textarea>
+    </div>
+    <button type="submit">Generate Email QR Code</button>
+</form>
+{% if qr_code %}
+    <h3>Your Email QR Code:</h3>
+    <img src="{{ qr_code }}" alt="Email QR Code">
+{% endif %}
+{% endblock %}
