@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import vcard, mecard, home, geo, wifi, epc, email
+from .views import home, vcard, mecard, geo, wifi, epc, email
 
 urlpatterns = [
     path('admin/', admin.site.urls),

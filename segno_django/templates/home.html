@@ -5,54 +5,56 @@
 <div class="container">
     <div class="form-container">
         <div id="Generic" class="tab-content active">
-            <label for="content">Content:</label>
-            <input type="text" id="content" name="content" placeholder="Enter content...">
+            <form method="post" id="qrForm" action="{% url 'home' %}">
+                {% csrf_token %}
+                <label for="content">Content:</label>
+                <input type="text" id="content" name="content" placeholder="Enter content..." required>
 
-            <label for="mode">Mode:</label>
-            <select id="mode" name="mode">
-                <option>Standard QR Code</option>
-                <option>Micro QR Code</option>
-            </select>
+                <label for="mode">Mode:</label>
+                <select id="mode" name="mode">
+                    <option value="standard">Standard QR Code</option>
+                    <option value="micro">Micro QR Code</option>
+                </select>
 
-            <label for="error-correction">Error Correction:</label>
-            <select id="error-correction" name="error-correction">
-                <option>25%</option>
-                <option>30%</option>
-                <option>50%</option>
-            </select>
+                <label for="error-correction">Error Correction:</label>
+                <select id="error-correction" name="error-correction">
+                    <option value="L">L (7%)</option>
+                    <option value="M" selected>M (15%)</option>
+                    <option value="Q">Q (25%)</option>
+                    <option value="H">H (30%)</option>
+                </select>
 
-            <label for="scale">Scale:</label>
-            <input type="number" id="scale" name="scale" min="1" max="10" value="3">
+                <label for="scale">Scale:</label>
+                <input type="number" id="scale" name="scale" min="1" max="10" value="3">
 
-            <label for="border">Border:</label>
-            <input type="number" id="border" name="border" min="1" max="10" value="1">
+                <label for="border">Border:</label>
+                <input type="number" id="border" name="border" min="1" max="10" value="1">
+            
+                <div class="color-settings">
+                    <label for="dark">Dark:</label>
+                    <input type="color" id="dark" name="dark" value="#000000">
 
-            <div class="color-settings">
-                <label for="dark">Dark:</label>
-                <input type="color" id="dark" name="dark" value="#000000">
+                    <label for="light">Light:</label>
+                    <input type="color" id="light" name="light" value="#FFFFFF">
 
-                <label for="light">Light:</label>
-                <input type="color" id="light" name="light" value="#FFFFFF">
+                    <label for="data-dark">Data Dark:</label>
+                    <input type="color" id="data-dark" name="data-dark" value="#000000">
 
-                <label for="data-dark">Data Dark:</label>
-                <input type="color" id="data-dark" name="data-dark" value="#000000">
+                    <label for="data-light">Data Light:</label>
+                    <input type="color" id="data-light" name="data-light" value="#FFFFFF">
+                </div>
 
-                <label for="data-light">Data Light:</label>
-                <input type="color" id="data-light" name="data-light" value="#FFFFFF">
-            </div>
-
-            <div class="buttons">
-                <button onclick="generateQRCode('qrForm','qrPreviewContainer','qrPreview')">Generate</button>
-                <button onclick="exportQRCodeAsPng('qrPreview')">Export as PNG</button>
-                <button onclick="exportSettingsasJson('qrForm')">Export Settings</button>
-                <button onclick="importSettingsFromPng('qrForm')">Import Settings</button>
-            </div>
+                <div class="buttons">
+                    <button type="submit">Generate</button>
+                </div>
+            </form>
         </div>
+        
         <div class="qr-preview">
             <h3>Resulting Image</h3>
             <div id="qr-code">
                 {% if qr_image %}
-                    <img src="{{ qr_image }}" alt="Generated QR Code">
+                    <img src="data:image/png;base64,{{ qr_image }}" alt="Generated QR Code">
                 {% endif %}
             </div>
         </div>
