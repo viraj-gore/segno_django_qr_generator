@@ -7,7 +7,7 @@ import segno.helpers
 import base64
 import io
 
-def home(request: HttpRequest):
+def home(request):
     qr_image = None
     if request.method == 'POST':
         try:
@@ -53,110 +53,224 @@ def home(request: HttpRequest):
             # Convert to base64
             qr_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
 
+            return render(request, 'home.html', {'qr_image': qr_image})
+
         except Exception as e:
             print(f"QR Code Generation Error: {e}")
 
-    return render(request, 'home.html', {'qr_image': qr_image})
+    return render(request, 'home.html')
 
 def vcard(request: HttpRequest):
-    qr_code_dir = os.path.join(settings.BASE_DIR, 'static', 'qr_codes')
+    v_code=None
     if request.method == "POST":
-        full_name = request.POST.get("full_name")
-        organization = request.POST.get("organization", "")
-        email = request.POST.get("email", "")
-        phone = request.POST.get("phone", "")
-        address = request.POST.get("address", "")
-        url = request.POST.get("url", "")
+        try:
+            full_name = request.POST.get("full_name")
+            organization = request.POST.get("organization", "")
+            email = request.POST.get("email", "")
+            phone = request.POST.get("phone", "")
+            address = request.POST.get("address", "")
+            url = request.POST.get("url", "")
+            
+            qr = segno.helpers.make_vcard(
+                name=full_name,
+                displayname=full_name,
+                org=organization,
+                email=email,
+                phone=phone,
+                street=address,
+                url=url,
+            )
+
+            buffer = io.BytesIO()
+
+            qr.save(
+                    buffer, 
+                    kind='png', 
+                    scale='5', 
+                )
+            # Convert to base64
+            v_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+            return render(request, "vcard.html", {"qr_code": v_code})
         
-        qr = segno.helpers.make_vcard(
-            name=full_name,
-            displayname=full_name,
-            org=organization,
-            email=email,
-            phone=phone,
-            street=address,
-            url=url,
-        )
-        qr_code_path = "static/qr_codes/vcard.png"
-        qr.save(qr_code_path, scale=10)
-        return render(request, "vcard.html", {"qr_code": qr_code_path})
+        except Exception as e:
+            print(f"QR Code Generation Error: {e}")
     return render(request, "vcard.html")
 
+
+
 def mecard(request):
+    me_code = None
     if request.method == "POST":
-        full_name = request.POST.get("full_name")
-        phone = request.POST.get("phone")
-        email = request.POST.get("email", "")
-        url = request.POST.get("url", "")
+        try:
+            name = request.POST.get('full_name')
+            phone = request.POST.get('phone')
+            email = request.POST.get('email')
+            url = request.POST.get('url')
+            
+            qr = segno.helpers.make_mecard(
+                name=name,
+                phone=phone,
+                email=email,
+                url=url,
+            )
+
+            buffer = io.BytesIO()
+
+            qr.save(
+                    buffer, 
+                    kind='png', 
+                    scale='5', 
+                )
+            # Convert to base64
+            me_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+            return render(request, "mecard.html", {'qr_code': me_code})
         
-        qr = segno.helpers.make_mecard(
-            name=full_name,
-            phone=phone,
-            email=email,
-            url=url,
-        )
-        qr_code_path = "static/qr_codes/mecard.png"
-        qr.save(qr_code_path, scale=10)
-        return render(request, "mecard.html", {"qr_code": qr_code_path})
+        except Exception as e:
+            print(f"QR Code Generation Error: {e}")
     return render(request, "mecard.html")
 
 def email(request):
+    email_code = None
     if request.method == "POST":
-        recipient = request.POST.get("recipient")
-        subject = request.POST.get("subject", "")
-        body = request.POST.get("body", "")
+        try:
+            recipient = request.POST.get("recipient")
+            subject = request.POST.get("subject", "")
+            body = request.POST.get("body", "")
+            
+            # Generate Email QR Code
+            qr = segno.helpers.make_email(to=recipient, subject=subject, body=body)
+
+            buffer = io.BytesIO()
+
+            qr.save(
+                    buffer, 
+                    kind='png', 
+                    scale='5', 
+                )
+            # Convert to base64
+            email_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            
+            return render(request, "email.html", {"qr_code": email_code})
         
-        # Generate Email QR Code
-        qr = segno.helpers.make_email(to=recipient, subject=subject, body=body)
-        qr_code_path = "static/qr_codes/email.png"
-        qr.save(qr_code_path, scale=10)
-        
-        return render(request, "email.html", {"qr_code": qr_code_path})
+        except Exception as e:
+            print(f"QR Code Generation Error: {e}")
+
     return render(request, "email.html")
 
 
 def geo(request):
-    if request.method == "POST":
-        latitude = request.POST.get("latitude")
-        longitude = request.POST.get("longitude")
-        altitude = request.POST.get("altitude", None)
+    """
+    View to generate a Geo QR Code based on latitude and longitude
+    """
+    geo_code = None
+
+    if request.method == 'POST':
+        # Get latitude and longitude from form submission
+        latitude = request.POST.get('latitude')
+        longitude = request.POST.get('longitude')
+
+        try:
+            # Validate latitude and longitude
+            lat = float(latitude)
+            lon = float(longitude)
+
+            # Create geo URI for QR Code
+            geo_uri = f"geo:{lat},{lon}"
+
+            # Generate QR Code with Segno
+            qr = segno.make(geo_uri)
+
+            # Save QR Code to a bytes buffer
+            buffer = io.BytesIO()
+            qr.save(buffer, kind='png', scale=5)
+            
+            # Encode the QR Code to base64 for HTML display
+            
+            geo_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            
+            return render(request, "geo.html", {"qr_code": geo_code})
         
-        # Generate Geo QR Code
-        qr = segno.helpers.make_geo(latitude=float(latitude), longitude=float(longitude), altitude=float(altitude) if altitude else None)
-        qr_code_path = "static/qr_codes/geo.png"
-        qr.save(qr_code_path, scale=10)
-        
-        return render(request, "geo.html", {"qr_code": qr_code_path})
+        except Exception as e:
+            print(f"QR Code Generation Error: {e}")
+
     return render(request, "geo.html")
 
 
 def wifi(request):
+    wifi_code = None
     if request.method == "POST":
-        ssid = request.POST.get("ssid")
-        password = request.POST.get("password")
-        security = request.POST.get("security", "WPA")
-        hidden = request.POST.get("hidden", "off") == "on"
+        try:
+            ssid = request.POST.get("ssid")
+            password = request.POST.get("password")
+            security = request.POST.get("security", "WPA")
+            hidden = request.POST.get("hidden", "off") == "on"
+            
+            # Generate WiFi QR Code
+            qr = segno.helpers.make_wifi(ssid=ssid, password=password, security=security, hidden=hidden)
+
+            buffer = io.BytesIO()
+
+            qr.save(
+                    buffer, 
+                    kind='png', 
+                    scale='5', 
+                )
+            
+            # Convert to base64
+            wifi_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            
+            return render(request, "wifi.html", {"qr_code": wifi_code})
         
-        # Generate WiFi QR Code
-        qr = segno.helpers.make_wifi(ssid=ssid, password=password, security=security, hidden=hidden)
-        qr_code_path = "static/qr_codes/wifi.png"
-        qr.save(qr_code_path, scale=10)
+        except Exception as e:
+            print(f"QR Code Generation Error: {e}")
         
-        return render(request, "wifi.html", {"qr_code": qr_code_path})
     return render(request, "wifi.html")
 
 
 def epc(request):
+    epc_code= None
     if request.method == "POST":
-        name = request.POST.get("name")
-        iban = request.POST.get("iban")
-        amount = request.POST.get("amount")
-        text = request.POST.get("text", "")
+        try:
+            bic = request.POST.get("bic")
+            iban = request.POST.get("iban")
+            amount = request.POST.get("amount")
+            name = request.POST.get("name")
+            
+            # Generate EPC QR Code
+            qr = segno.helpers.make_epc_qr(name=name, iban=iban, amount=float(amount), bic=bic)
+
+            epc_string = "\n".join([
+                "BCD",      # Service Tag
+                "002",      # Version
+                "1",        # Encoding (UTF-8)
+                "SCT",      # Identification
+                bic or "",  # BIC (optional)
+                name,       # Account Holder Name
+                iban,       # IBAN
+                f"EUR{float(amount) if amount else ''}",  # Amount with EUR prefix
+                "",         # Purpose (optional)
+                "",         # Remittance Reference (optional)
+                ""          # Unstructured Information (optional)
+            ])
+            qr = segno.make(epc_string)
+            
+            buffer = io.BytesIO()
+
+            qr.save(
+                    buffer, 
+                    kind='png', 
+                    scale='5', 
+                )
+            
+            # Convert to base64
+            epc_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            
+            return render(request, "epc.html", {"qr_code": epc_code})
         
-        # Generate EPC QR Code
-        qr = segno.helpers.make_epc(name=name, iban=iban, amount=float(amount), text=text)
-        qr_code_path = "static/qr_codes/epc.png"
-        qr.save(qr_code_path, scale=10)
+        except Exception as e:
+            print(f"QR Code Generation Error: {e}")
         
-        return render(request, "epc.html", {"qr_code": qr_code_path})
+        
     return render(request, "epc.html")

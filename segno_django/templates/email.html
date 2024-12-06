@@ -19,6 +19,6 @@
 </form>
 {% if qr_code %}
     <h3>Your Email QR Code:</h3>
-    <img src="{{ qr_code }}" alt="Email QR Code">
+    <img src="data:image/png;base64,{{ qr_code }}" alt="Email QR Code">
 {% endif %}
 {% endblock %}

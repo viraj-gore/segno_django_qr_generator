@@ -21,7 +21,7 @@ from .views import home, vcard, mecard, geo, wifi, epc, email
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Home page set to the generic QR code generator
-    path('qr-code-demo/home/', home, name='home'),
+    path('qr-code-demo/', home, name='home'),
     # URL patterns for other QR code types
     path('vcard/', vcard, name='vcard'),
     path('mecard/', mecard, name='mecard'),

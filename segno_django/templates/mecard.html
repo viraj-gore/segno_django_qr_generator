@@ -23,6 +23,6 @@
 </form>
 {% if qr_code %}
     <h3>Your MeCard QR Code:</h3>
-    <img src="{{ qr_code }}" alt="MeCard QR Code">
+    <img src="data:image/png;base64,{{ qr_code }}" alt="MeCard QR Code">
 {% endif %}
 {% endblock %}

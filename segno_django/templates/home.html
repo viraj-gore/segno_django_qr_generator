@@ -7,8 +7,8 @@
         <div id="Generic" class="tab-content active">
             <form method="post" id="qrForm" action="{% url 'home' %}">
                 {% csrf_token %}
-                <label for="content">Content:</label>
-                <input type="text" id="content" name="content" placeholder="Enter content..." required>
+                Content:
+                <input type="text" id="content" name="content" placeholder="Enter content..." required><br/>
 
                 <label for="mode">Mode:</label>
                 <select id="mode" name="mode">
@@ -25,10 +25,10 @@
                 </select>
 
                 <label for="scale">Scale:</label>
-                <input type="number" id="scale" name="scale" min="1" max="10" value="3">
+                <input type="number" id="scale" name="scale" placeholder="Enter scale size..." min="1" max="10" value="5">
 
                 <label for="border">Border:</label>
-                <input type="number" id="border" name="border" min="1" max="10" value="1">
+                <input type="number" id="border" name="border" placeholder="Enter border size (if required)" min="1" max="10" value="1">
             
                 <div class="color-settings">
                     <label for="dark">Dark:</label>
@@ -51,7 +51,6 @@
         </div>
         
         <div class="qr-preview">
-            <h3>Resulting Image</h3>
             <div id="qr-code">
                 {% if qr_image %}
                     <img src="data:image/png;base64,{{ qr_image }}" alt="Generated QR Code">

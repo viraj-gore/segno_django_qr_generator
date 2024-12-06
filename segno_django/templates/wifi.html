@@ -1,18 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>WiFi QR Code</h2>
-<form method="POST" action="{% url 'wifi' %}">
+<h2>WiFi QR Code Generator</h2>
+<form method="post" action="{% url 'wifi' %}">
     {% csrf_token %}
-    <label for="ssid">SSID:</label>
-    <input type="text" id="ssid" name="ssid" required>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <label for="encryption">Encryption:</label>
-    <select id="encryption" name="encryption">
-        <option value="WPA">WPA/WPA2</option>
-        <option value="WEP">WEP</option>
-        <option value="None">None</option>
-    </select>
-    <button type="submit">Generate QR Code</button>
+    <div>
+        <label for="ssid">SSID:</label>
+        <input type="text" id="ssid" name="ssid" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <label for="encryption">Encryption:</label>
+        <select id="encryption" name="encryption">
+            <option value="WPA">WPA/WPA2</option>
+            <option value="WEP">WEP</option>
+            <option value="None">None</option>
+        </select>
+    </div>
+    <button type="submit">Generate WiFi QR Code</button>
 </form>
+{% if qr_code %}
+    <h3>Your WiFi QR Code:</h3>
+    <img src="data:image/png;base64,{{ qr_code }}" alt="WiFi QR Code">
+{% endif %}
 {% endblock %}

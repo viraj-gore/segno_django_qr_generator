@@ -1,12 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Geo QR Code</h2>
-<form method="POST" action="{% url 'geo' %}">
+<h2>Geo QR Code Generator</h2>
+<form method="post" action="{% url 'geo' %}">
     {% csrf_token %}
-    <label for="latitude">Latitude:</label>
-    <input type="text" id="latitude" name="latitude" required>
-    <label for="longitude">Longitude:</label>
-    <input type="text" id="longitude" name="longitude" required>
-    <button type="submit">Generate QR Code</button>
+    <div>
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" required>
+    </div>
+    <div>
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" required>
+    </div>
+    <button type="submit">Generate Geo QR Code</button>
 </form>
+{% if qr_code %}
+    <h3>Your Geo QR Code:</h3>
+    <img src="data:image/png;base64,{{ qr_code }}" alt="Geo QR Code">
+{% endif %}
 {% endblock %}

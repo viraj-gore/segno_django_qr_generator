@@ -31,6 +31,6 @@
 </form>
 {% if qr_code %}
     <h3>Your vCard QR Code:</h3>
-    <img src="{{ qr_codes }}" alt="vCard QR Code">
+    <img src="data:image/png;base64,{{ qr_image }}" alt="vCard QR Code">
 {% endif %}
 {% endblock %}
