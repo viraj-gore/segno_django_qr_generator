@@ -21,7 +21,7 @@
     </div>
     <div>
         <label for="address">Address:</label>
-        <textarea id="address" name="address"></textarea>
+        <textarea id="address" name="address" rows="4" cols="105"></textarea>
     </div>
     <div>
         <label for="url">Website:</label>
@@ -31,6 +31,6 @@
 </form>
 {% if qr_code %}
     <h3>Your vCard QR Code:</h3>
-    <img src="data:image/png;base64,{{ qr_image }}" alt="vCard QR Code">
+    <img src="data:image/png;base64,{{ qr_code }}" alt="vCard QR Code">
 {% endif %}
 {% endblock %}

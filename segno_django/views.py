@@ -1,7 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.conf import settings
-import os
+
 import segno
 import segno.helpers
 import base64
@@ -60,7 +58,7 @@ def home(request):
 
     return render(request, 'home.html')
 
-def vcard(request: HttpRequest):
+def vcard(request):
     v_code=None
     if request.method == "POST":
         try:
@@ -230,16 +228,31 @@ def wifi(request):
 
 
 def epc(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        iban = request.POST.get("iban")
-        amount = request.POST.get("amount")
-        bic = request.POST.get("bic", "")
+    epc_code=None
+    try:
+        if request.method == "POST":
+            name = request.POST.get("name")
+            iban = request.POST.get("iban")
+            amount = request.POST.get("amount")
 
-        # Generate EPC QR Code
-        qr = segno.helpers.make_epc(name=name, iban=iban, amount=float(amount), bic=bic)
-        qr_code_path = "static/qr_codes/epc.png"
-        qr.save(qr_code_path, scale=10)
+            # Generate EPC QR Code
+            qr = segno.helpers.make_epc_qr(name=name, iban=iban, amount=float(amount))
 
-        return render(request, "epc.html", {"qr_code": qr_code_path})
+            buffer = io.BytesIO()
+
+            qr.save(
+                        buffer, 
+                        kind='png', 
+                        scale='5', 
+                    )
+                
+                # Convert to base64
+            epc_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+            return render(request, "epc.html", {"qr_code": epc_code})
+    
+    except Exception as e:
+        print(f"QR Code Generation Error: {e}")
+    
+    
     return render(request, "epc.html")

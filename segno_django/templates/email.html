@@ -13,12 +13,14 @@
     </div>
     <div>
         <label for="body">Body:</label>
-        <textarea id="body" name="body"></textarea>
+        <textarea id="body" name="body" rows="10" cols="105"></textarea>
     </div>
     <button type="submit">Generate Email QR Code</button>
 </form>
+<div class="content">
 {% if qr_code %}
     <h3>Your Email QR Code:</h3>
     <img src="data:image/png;base64,{{ qr_code }}" alt="Email QR Code">
 {% endif %}
+</div>
 {% endblock %}
