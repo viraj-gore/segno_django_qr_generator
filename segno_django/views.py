@@ -230,47 +230,16 @@ def wifi(request):
 
 
 def epc(request):
-    epc_code= None
     if request.method == "POST":
-        try:
-            bic = request.POST.get("bic")
-            iban = request.POST.get("iban")
-            amount = request.POST.get("amount")
-            name = request.POST.get("name")
-            
-            # Generate EPC QR Code
-            qr = segno.helpers.make_epc_qr(name=name, iban=iban, amount=float(amount), bic=bic)
+        name = request.POST.get("name")
+        iban = request.POST.get("iban")
+        amount = request.POST.get("amount")
+        bic = request.POST.get("bic", "")
 
-            epc_string = "\n".join([
-                "BCD",      # Service Tag
-                "002",      # Version
-                "1",        # Encoding (UTF-8)
-                "SCT",      # Identification
-                bic or "",  # BIC (optional)
-                name,       # Account Holder Name
-                iban,       # IBAN
-                f"EUR{float(amount) if amount else ''}",  # Amount with EUR prefix
-                "",         # Purpose (optional)
-                "",         # Remittance Reference (optional)
-                ""          # Unstructured Information (optional)
-            ])
-            qr = segno.make(epc_string)
-            
-            buffer = io.BytesIO()
+        # Generate EPC QR Code
+        qr = segno.helpers.make_epc(name=name, iban=iban, amount=float(amount), bic=bic)
+        qr_code_path = "static/qr_codes/epc.png"
+        qr.save(qr_code_path, scale=10)
 
-            qr.save(
-                    buffer, 
-                    kind='png', 
-                    scale='5', 
-                )
-            
-            # Convert to base64
-            epc_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            
-            return render(request, "epc.html", {"qr_code": epc_code})
-        
-        except Exception as e:
-            print(f"QR Code Generation Error: {e}")
-        
-        
+        return render(request, "epc.html", {"qr_code": qr_code_path})
     return render(request, "epc.html")
