@@ -225,34 +225,3 @@ def wifi(request):
             print(f"QR Code Generation Error: {e}")
         
     return render(request, "wifi.html")
-
-
-def epc(request):
-    epc_code=None
-    try:
-        if request.method == "POST":
-            name = request.POST.get("name")
-            iban = request.POST.get("iban")
-            amount = request.POST.get("amount")
-
-            # Generate EPC QR Code
-            qr = segno.helpers.make_epc_qr(name=name, iban=iban, amount=float(amount))
-
-            buffer = io.BytesIO()
-
-            qr.save(
-                        buffer, 
-                        kind='png', 
-                        scale='5', 
-                    )
-                
-                # Convert to base64
-            epc_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
-
-            return render(request, "epc.html", {"qr_code": epc_code})
-    
-    except Exception as e:
-        print(f"QR Code Generation Error: {e}")
-    
-    
-    return render(request, "epc.html")

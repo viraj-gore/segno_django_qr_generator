@@ -5,13 +5,13 @@
     {% csrf_token %}
     <div>
         <label for="latitude">Latitude:</label>
-        <input type="text" id="latitude" name="latitude" required>
+        <input type="text" id="latitude" name="latitude" style="width: 785px;" required>
     </div>
     <div>
         <label for="longitude">Longitude:</label>
-        <input type="text" id="longitude" name="longitude" required>
+        <input type="text" id="longitude" name="longitude" style="width: 785px;" required>
     </div>
-    <button type="submit">Generate Geo QR Code</button>
+    <button style="background-color:#FF6500;" type="submit">Generate Geo QR Code</button>
 </form>
 {% if qr_code %}
     <h3>Your Geo QR Code:</h3>

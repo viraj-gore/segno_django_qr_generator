@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import home, vcard, mecard, geo, wifi, epc, email
+from .views import home, vcard, mecard, geo, wifi, email
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,7 +26,6 @@ urlpatterns = [
     path('vcard/', vcard, name='vcard'),
     path('mecard/', mecard, name='mecard'),
     path('email/', email, name='email'),
-    path('epc/', epc, name='epc'),
     path('geo/', geo, name='geo'),
     path('wifi/', wifi, name='wifi'),
 ]

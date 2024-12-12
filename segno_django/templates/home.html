@@ -7,11 +7,11 @@
         <div id="Generic" class="tab-content active">
             <form method="post" id="qrForm" action="{% url 'home' %}">
                 {% csrf_token %}
-                Content:
-                <input type="text" id="content" name="content" placeholder="Enter content..." required><br/>
+                <label for="error-correction">Content:</label>
+                <input type="text" id="content" name="content" placeholder="Enter content..." style="width: 710px;" required><br/>
 
                 <label for="error-correction">Error Correction:</label>
-                <select id="error-correction" name="error-correction">
+                <select id="error-correction" name="error-correction" style="width: 728px;">
                     <option value="L">L (7%)</option>
                     <option value="M" selected>M (15%)</option>
                     <option value="Q">Q (25%)</option>
@@ -19,10 +19,10 @@
                 </select>
 
                 <label for="scale">Scale:</label>
-                <input type="number" id="scale" name="scale" placeholder="Enter scale size..." min="1" max="10" value="5">
+                <input type="number" id="scale" name="scale" placeholder="Enter scale size..." min="1" max="10" value="5" style="width: 710px;">
 
                 <label for="border">Border:</label>
-                <input type="number" id="border" name="border" placeholder="Enter border size (if required)" min="1" max="10" value="1">
+                <input type="number" id="border" name="border" placeholder="Enter border size (if required)" min="1" max="10" value="1" style="width: 710px;">
             
                 <div class="color-settings">
                     <label for="dark">Dark:</label>
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="buttons">
-                    <button type="submit">Generate</button>
+                    <button style="background-color:#FF6500;" type="submit">Generate</button>
                 </div>
             </form>
         </div>

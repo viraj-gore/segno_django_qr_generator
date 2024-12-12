@@ -9,15 +9,15 @@
     <style>
         /* Navbar Styling */
         .navbar {
-            background-color: #4b8bbe;
+            background-color: #1E3E62;
             display: flex;
             justify-content: center;
-            padding: 10px 0;
+            padding: 20px 0;
             margin: 0;
         }
 
         .navbar a {
-            color: white;
+            color: rgb(0, 0, 0);
             text-decoration: none;
             font-size: 16px;
             font-weight: bold;
@@ -28,13 +28,13 @@
         }
 
         .navbar a:hover {
-            background-color: #3a6f98;
+            background-color: #FF6500;
         }
 
         /* Main Content Styling */
         .header {
             text-align: center;
-            background-color: #4b8bbe;
+            background-color: #1E3E62;
             color: white;
             padding: 20px 0;
         }
@@ -59,18 +59,17 @@
 <body>
     <!-- Header Section -->
     <header class="header">
-        <h1>Segno QR Code Generator</h1>
+        <h1 style="color:#FF6500;">Segno QR Code Generator</h1>
     </header>
 
     <!-- Navbar Section -->
     <nav class="navbar">
-        <a href="{% url 'home' %}">Generic</a>
-        <a href="{% url 'vcard' %}">vCard</a>
-        <a href="{% url 'mecard' %}">MeCard</a>
-        <a href="{% url 'email' %}">Email</a>
-        <a href="{% url 'geo' %}">Geo</a>
-        <a href="{% url 'wifi' %}">WiFi</a>
-        <a href="{% url 'epc' %}">EPC</a>
+        <a href="{% url 'home' %}" style="color:#ffffff;">Generic</a>
+        <a href="{% url 'vcard' %}" style="color:#ffffff;">vCard</a>
+        <a href="{% url 'mecard' %}" style="color:#ffffff;">MeCard</a>
+        <a href="{% url 'email' %}" style="color:#ffffff;">Email</a>
+        <a href="{% url 'geo' %}" style="color:#ffffff;">Geo</a>
+        <a href="{% url 'wifi' %}" style="color:#ffffff;">WiFi</a>
     </nav>
 
     <!-- Main Content Section -->
